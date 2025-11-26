@@ -34,7 +34,7 @@ export default async function AdminClientsPage() {
                                 </td>
                             </tr>
                         ) : (
-                            clients.map((client) => (
+                            clients.map((client: any) => (
                                 <tr key={client.id} className="bg-white border-b hover:bg-gray-50">
                                     <td className="px-6 py-4 font-medium flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-full bg-[#D4AF37] flex items-center justify-center text-white font-bold">
