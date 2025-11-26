@@ -1,11 +1,13 @@
 import prisma from "@/lib/prisma";
-import { User } from "@prisma/client"; // ← نستخدم Prisma type الحقيقي
+import { Prisma } from "@prisma/client";
 
-interface ClientWithRelations extends User {
-    _count: {
-        orders: number;
+type ClientWithRelations = Prisma.UserGetPayload<{
+    include: {
+        _count: {
+            select: { orders: true };
+        };
     };
-}
+}>;
 
 export default async function AdminClientsPage() {
     const clients: ClientWithRelations[] = await prisma.user.findMany({
