@@ -1,23 +1,18 @@
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 
-type ClientWithRelations = Prisma.UserGetPayload<{
-    include: {
-        _count: {
-            select: { orders: true };
-        };
-    };
-}>;
+type ClientWithRelations = Awaited<
+    ReturnType<typeof prisma.user.findMany>
+>[0];
 
 export default async function AdminClientsPage() {
-    const clients: ClientWithRelations[] = await prisma.user.findMany({
+    const clients = await prisma.user.findMany({
         where: { role: "CLIENT" },
         include: {
             _count: {
-                select: { orders: true },
-            },
+                select: { orders: true }
+            }
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "desc" }
     });
 
     return (
@@ -39,22 +34,16 @@ export default async function AdminClientsPage() {
                     <tbody>
                         {clients.length === 0 ? (
                             <tr>
-                                <td
-                                    colSpan={5}
-                                    className="px-6 py-8 text-center text-muted"
-                                >
+                                <td colSpan={5} className="px-6 py-8 text-center text-muted">
                                     No clients found.
                                 </td>
                             </tr>
                         ) : (
-                            clients.map((client) => (
-                                <tr
-                                    key={client.id}
-                                    className="bg-white border-b hover:bg-gray-50"
-                                >
+                            clients.map((client: ClientWithRelations) => (
+                                <tr key={client.id} className="bg-white border-b hover:bg-gray-50">
                                     <td className="px-6 py-4 font-medium flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-full bg-[#D4AF37] flex items-center justify-center text-white font-bold">
-                                            {client.name?.[0] || "C"}
+                                            {client?.name?.[0] || "C"}
                                         </div>
                                         {client.name}
                                     </td>
@@ -64,13 +53,13 @@ export default async function AdminClientsPage() {
                                     </td>
 
                                     <td className="px-6 py-4 font-bold text-[#3E2723]">
-                                        {client._count.orders}
+                                        {client._count?.orders ?? 0}
                                     </td>
 
                                     <td className="px-6 py-4 text-muted">
-                                        {new Date(
-                                            client.createdAt
-                                        ).toLocaleDateString()}
+                                        {client.createdAt
+                                            ? new Date(client.createdAt).toLocaleDateString()
+                                            : "—"}
                                     </td>
 
                                     <td className="px-6 py-4">
