@@ -56,10 +56,12 @@ export default async function AdminRestaurantPage({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
         {/* Add Product Form */}
         <div className="card h-fit">
           <h3 className="h3 mb-4">Add Product</h3>
 
+          {/* IMPORTANT: createProduct now returns void → no TS error */}
           <form action={createProduct} className="flex flex-col gap-4">
             <input type="hidden" name="restaurantId" value={restaurant.id} />
 
@@ -106,6 +108,7 @@ export default async function AdminRestaurantPage({
                 placeholder="Breads"
                 list="categories"
               />
+
               <datalist id="categories">
                 <option value="Breads" />
                 <option value="Drinks" />
@@ -163,6 +166,7 @@ export default async function AdminRestaurantPage({
             ))
           )}
         </div>
+
       </div>
     </div>
   );
